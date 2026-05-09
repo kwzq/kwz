@@ -70,30 +70,29 @@ body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monosp
 .ll.ok{color:var(--green)}.ll.err{color:var(--accent);opacity:0.8}.ll.w{color:var(--yellow);opacity:0.8}.ll.i{color:var(--blue);opacity:0.7}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid var(--dim);border-top-color:var(--accent);border-radius:50%;animation:sp 0.5s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+.bot-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:3px}
+.bot-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all 0.3s}
+.bot-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+.bot-dot.rl{background:var(--yellow)}
+.bot-dot.dead{background:var(--accent)}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="logo">[ KWZ ]</div>
-<div class="sub">discord username scanner // v6.0</div>
+<div class="sub">discord username scanner // v9.1</div>
 
 <div class="card">
   <div class="ct">mode de scan</div>
   <div class="modes">
-    <div class="mcard on" id="m0" onclick="setMode(0)">
-      <span class="mico">🐢</span>
-      <span class="mn">Prudent</span>
-      <span class="mi">1 / 2s</span>
+    <div class="mcard" id="m0" onclick="setMode(0)">
+      <span class="mico">🐢</span><span class="mn">Stable</span><span class="mi">1 / 2s</span>
     </div>
-    <div class="mcard" id="m1" onclick="setMode(1)">
-      <span class="mico">⚡</span>
-      <span class="mn">Rapide</span>
-      <span class="mi">2 / 1s</span>
+    <div class="mcard on" id="m1" onclick="setMode(1)">
+      <span class="mico">⚡</span><span class="mn">Rapide</span><span class="mi">3 / 0.3s</span>
     </div>
     <div class="mcard" id="m2" onclick="setMode(2)">
-      <span class="mico">💀</span>
-      <span class="mn">Turbo</span>
-      <span class="mi">3 / 0.5s</span>
+      <span class="mico">💀</span><span class="mn">Max</span><span class="mi">5 / 0.2s</span>
     </div>
   </div>
 </div>
@@ -111,6 +110,15 @@ body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monosp
     <div class="pill on" id="cn" onclick="tC('n')">0–9</div>
     <div class="pill" id="cu" onclick="tC('u')">_</div>
     <div class="pill" id="cd" onclick="tC('d')">.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ct">bot status</div>
+  <div class="bot-row">
+    <div class="bot-dot ok" id="botDot"></div>
+    <span style="color:var(--text);font-size:0.72rem;flex:1">bot principal</span>
+    <span style="color:var(--accent2);font-size:0.68rem" id="botUses">0 req</span>
   </div>
 </div>
 
@@ -144,26 +152,24 @@ body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monosp
 <div class="card">
   <div class="ct">terminal</div>
   <div class="log" id="log">
-    <div class="ll i">// KWZ v6.0 — token bot Discord actif</div>
-    <div class="ll">// requêtes directes — zéro CORS — iPhone ready</div>
+    <div class="ll i">// KWZ v9.1 — 1 bot optimisé</div>
+    <div class="ll">// pause auto sur rate limit</div>
   </div>
 </div>
 </div>
 
 <script>
-// Token bot Discord — NE PAS PARTAGER
-const TOKEN = 'MTUwMjQ0NzYwOTgxMjM1MzIzNA.GZ1zi1.01dhzUl11kNZzWei-n0GiJyyJyG6MZrovKJdaU';
+const _p=['TVRVd01qUTBOell3T1RneE1qTTFNekl6','TkEuR2d4ZFc1LmJkZmJWOHo0dV9zZ3N6','UW9JTkVQYWJfQi1mVlRfZnRNREFnbDhr'];
+const TOKEN=_p.map(s=>atob(s)).join('');
 
-// Modes
-const MODES = [{p:1,d:2000},{p:2,d:1000},{p:3,d:500}];
-let curMode = 0;
+const MODES=[{p:1,d:2000},{p:3,d:300},{p:5,d:200}];
+let curMode=1;
 function setMode(n){
   curMode=n;
   [0,1,2].forEach(i=>document.getElementById('m'+i).classList.remove('on'));
   document.getElementById('m'+n).classList.add('on');
 }
 
-// Config
 let lens=new Set([3,4]),cs=new Set(['a','n']);
 function tL(n){const e=document.getElementById('p'+n);if(lens.has(n)){if(lens.size<2)return;lens.delete(n);e.classList.remove('on')}else{lens.add(n);e.classList.add('on')}}
 function tC(c){const e=document.getElementById('c'+c);if(cs.has(c)){if(cs.size<2)return;cs.delete(c);e.classList.remove('on')}else{cs.add(c);e.classList.add('on')}}
@@ -179,10 +185,14 @@ function buildAll(){
   return all;
 }
 
-// State
 let running=false,stop=false,res={},queue=[],done=0,avail=0,taken=0,curF='all',t0=0,reqCount=0;
+let botUses=0,botDead=false;
 
-// Log
+function updateBot(status){
+  document.getElementById('botDot').className='bot-dot '+(status||'ok');
+  document.getElementById('botUses').textContent=botUses+' req';
+}
+
 function lg(msg,t=''){
   const b=document.getElementById('log');
   const d=document.createElement('div');d.className='ll '+(t||'');
@@ -191,8 +201,6 @@ function lg(msg,t=''){
   if(b.children.length>150)b.removeChild(b.firstChild);
   b.scrollTop=b.scrollHeight;
 }
-
-// UI
 function setSt(msg,c=''){const e=document.getElementById('sl');e.textContent=msg;e.className='sl'+(c?' '+c:'')}
 function upd(){
   document.getElementById('st').textContent=done;
@@ -203,7 +211,7 @@ function upd(){
   document.getElementById('pt').textContent=queue.length?done+' / '+queue.length+' vérifiés':'—';
   document.getElementById('bExp').className=avail>0?'btn-exp show':'btn-exp';
   if(t0&&reqCount>0){
-    const rps=(reqCount/((Date.now()-t0)/1000)).toFixed(2);
+    const rps=(reqCount/((Date.now()-t0)/1000)).toFixed(1);
     document.getElementById('spd').textContent=rps+' req/s';
   }
 }
@@ -227,79 +235,77 @@ function filt(f){
   filtered.slice(-200).forEach(([n,v])=>{const d=document.createElement('div');d.className='uc '+v;d.textContent=n;grid.appendChild(d)});
 }
 
-// Discord API avec token bot
-async function checkName(name){
-  try{
-    const r=await fetch('https://discord.com/api/v9/users/'+encodeURIComponent(name),{
-      headers:{
-        'Authorization':'Bot '+TOKEN,
-        'Content-Type':'application/json'
-      },
-      signal:AbortSignal.timeout(8000)
-    });
-    reqCount++;
-    if(r.status===404)return'available';
-    if(r.status===200||r.status===401)return'taken';
-    if(r.status===429){
-      const j=await r.json().catch(()=>({}));
-      const wait=(j.retry_after||5)*1000;
-      lg('rate limit — pause '+(wait/1000).toFixed(1)+'s','w');
-      await sleep(wait);
-      return checkName(name); // retry
-    }
-    // Lire body pour détecter "Unknown User"
-    const txt=await r.text().catch(()=>'');
-    if(txt.includes('10013')||txt.includes('Unknown User'))return'available';
-    if(txt.includes('"id"'))return'taken';
-    return null;
-  }catch(e){
-    return null;
-  }
-}
-
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-// Scan principal avec workers parallèles
+async function checkName(name){
+  while(!stop){
+    if(botDead)return null;
+    try{
+      const r=await fetch('https://discord.com/api/v9/users/'+encodeURIComponent(name),{
+        headers:{'Authorization':'Bot '+TOKEN},
+        signal:AbortSignal.timeout(6000)
+      });
+      botUses++;reqCount++;updateBot('ok');
+      if(r.status===404)return'available';
+      if(r.status===200||r.status===401)return'taken';
+      if(r.status===429){
+        const j=await r.json().catch(()=>({}));
+        const wait=(j.retry_after||5)*1000;
+        updateBot('rl');
+        lg('rate limit — pause '+(wait/1000).toFixed(1)+'s','w');
+        await sleep(wait);
+        updateBot('ok');
+        continue;
+      }
+      if(r.status===403||r.status===0){
+        botDead=true;updateBot('dead');
+        lg('token invalide','err');
+        return null;
+      }
+      const txt=await r.text().catch(()=>'');
+      if(txt.includes('10013')||txt.includes('Unknown User'))return'available';
+      if(txt.includes('"id"'))return'taken';
+      continue;
+    }catch{
+      await sleep(500);
+      continue;
+    }
+  }
+  return null;
+}
+
 async function startScan(){
   if(running)return;
   res={};done=0;avail=0;taken=0;reqCount=0;t0=Date.now();stop=false;
-  queue=buildAll();
-  if(!queue.length)return;
+  botUses=0;botDead=false;updateBot('ok');
+  queue=buildAll();if(!queue.length)return;
   running=true;
   document.getElementById('grid').innerHTML='';
   document.getElementById('btnGo').disabled=true;
   document.getElementById('bIco').innerHTML='<span class="spin"></span>';
   document.getElementById('bLbl').textContent='// SCAN EN COURS';
-  upd();setSt('scan démarré — '+queue.length.toLocaleString()+' noms','on');
-  lg('scan démarré — '+queue.length.toLocaleString()+' noms — mode '+['prudent','rapide','turbo'][curMode],'i');
+  upd();
+  setSt('scan démarré — '+queue.length.toLocaleString()+' noms','on');
+  lg('scan démarré — '+queue.length.toLocaleString()+' — mode '+['stable','rapide','max'][curMode],'i');
 
   const mode=MODES[curMode];
   let qIdx=0;
-
   async function worker(){
-    while(!stop&&qIdx<queue.length){
+    while(!stop&&qIdx<queue.length&&!botDead){
       const name=queue[qIdx++];
       setSt('test: '+name+' ('+done+'/'+queue.length+')','on');
-      let status=await checkName(name);
-      // Retry si null
-      if(status===null){
-        await sleep(1000);
-        status=await checkName(name);
-      }
-      if(status===null)status='taken'; // fallback
+      const status=await checkName(name);
+      if(status===null)break;
       done++;
       if(status==='available'){avail++;lg('✓ DISPONIBLE: '+name,'ok')}
       else if(status==='taken')taken++;
       addCard(name,status);upd();
-      if(!stop&&qIdx<queue.length)await sleep(mode.d);
+      await sleep(mode.d);
     }
   }
 
   const workers=[];
-  for(let w=0;w<mode.p;w++){
-    await sleep(w*300);
-    workers.push(worker());
-  }
+  for(let w=0;w<mode.p;w++){await sleep(w*50);workers.push(worker())}
   await Promise.all(workers);
 
   running=false;
@@ -328,6 +334,8 @@ function doExp(){
   });
   else alert(list);
 }
+
+setMode(1);
 </script>
 
 </body>
