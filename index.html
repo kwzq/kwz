@@ -1,1 +1,334 @@
-a
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>KWZ</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0000;--bg2:#0f0202;--card:#120303;--border:#2a0505;--accent:#ff2020;--accent2:#cc1010;--dim:#6b0000;--green:#00ff41;--yellow:#ffcc00;--blue:#00aaff;--text:#ffb0b0;--muted:#4a1010;--glow:rgba(255,32,32,0.3)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:9999}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;padding:16px 14px 60px}
+.wrap{max-width:500px;margin:0 auto}
+.logo{font-family:'VT323',monospace;font-size:3.4rem;color:var(--accent);text-align:center;text-shadow:0 0 20px var(--glow);letter-spacing:0.15em;animation:flicker 5s infinite}
+@keyframes flicker{0%,94%,96%,100%{opacity:1}95%{opacity:0.6}95.8%{opacity:0.4}}
+.sub{text-align:center;font-size:0.68rem;color:var(--muted);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:16px;margin-bottom:10px;position:relative}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--dim),transparent)}
+.ct{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px}
+.ct::before{content:'// '}
+.lbl{font-size:0.6rem;color:var(--dim);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.pill{padding:7px 12px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.8rem;cursor:pointer;border-radius:2px;transition:all 0.15s;user-select:none}
+.pill.on{border-color:var(--dim);color:var(--accent);background:rgba(255,32,32,0.06)}
+.modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:4px}
+.mcard{border:1px solid var(--border);border-radius:3px;padding:10px 6px;cursor:pointer;text-align:center;background:var(--bg2);user-select:none;transition:all 0.15s}
+.mcard .mico{font-size:1.1rem;display:block;margin-bottom:3px;filter:grayscale(1);opacity:0.4;transition:all 0.15s}
+.mcard .mn{font-size:0.72rem;color:var(--muted);display:block;text-transform:uppercase;letter-spacing:0.08em}
+.mcard .mi{font-size:0.58rem;color:var(--muted);opacity:0.5;margin-top:2px;display:block}
+.mcard.on{border-color:var(--dim);background:rgba(255,32,32,0.05)}
+.mcard.on .mico{filter:none;opacity:1}
+.mcard.on .mn{color:var(--accent)}
+.btn{width:100%;padding:15px;background:transparent;border:1px solid var(--accent2);border-radius:3px;color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.95rem;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;box-shadow:0 0 16px rgba(255,32,32,0.07)}
+.btn:disabled{opacity:0.25;cursor:not-allowed}
+.btn:not(:disabled):active{background:rgba(255,32,32,0.06)}
+.btn2{width:100%;padding:11px;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.84rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer}
+.btn2:active{border-color:var(--accent);color:var(--accent)}
+.prog{height:3px;background:var(--border);margin-bottom:5px}
+.pf{height:100%;width:0%;background:var(--accent);transition:width 0.3s;box-shadow:0 0 6px var(--glow)}
+.pt{font-size:0.66rem;color:var(--muted);text-align:center;margin-bottom:10px}
+.stats{display:flex;border:1px solid var(--border);border-radius:3px;overflow:hidden;background:var(--bg2);margin-bottom:10px}
+.stat{flex:1;padding:9px 4px;text-align:center;border-right:1px solid var(--border)}
+.stat:last-child{border:none}
+.sn{display:block;font-size:1.2rem}
+.sn.r{color:var(--accent)}.sn.g{color:var(--green)}.sn.b{color:var(--blue)}
+.sl2{font-size:0.56rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted)}
+.spd{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);border-radius:3px;padding:9px 12px;margin-bottom:10px;background:var(--bg2);font-size:0.68rem;color:var(--muted)}
+.spd span:last-child{color:var(--accent2);font-size:0.88rem}
+.sl{font-size:0.7rem;color:var(--muted);text-align:center;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sl::before{content:'> '}
+.sl.on{color:var(--accent2)}.sl.ok{color:var(--green)}.sl.w{color:var(--yellow)}
+.ftabs{display:flex;gap:5px;margin-bottom:10px}
+.ftab{flex:1;padding:7px 4px;background:var(--bg2);border:1px solid var(--border);border-radius:2px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.68rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.08em}
+.ftab.on{background:rgba(255,32,32,0.05);border-color:var(--dim);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;max-height:280px;overflow-y:auto}
+.grid::-webkit-scrollbar{width:3px}
+.grid::-webkit-scrollbar-thumb{background:var(--dim)}
+.uc{padding:9px 5px;border-radius:2px;border:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:0.85rem;text-align:center;animation:pop 0.15s;background:var(--bg2)}
+@keyframes pop{from{opacity:0;transform:scale(0.82)}to{opacity:1;transform:scale(1)}}
+.uc.available{border-color:var(--green);color:var(--green);background:rgba(0,255,65,0.05);box-shadow:0 0 8px rgba(0,255,65,0.1)}
+.uc.taken{border-color:#180404;color:#240606;background:#080101}
+.empty{grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:0.78rem;line-height:2}
+.btn-exp{display:none;width:100%;margin-top:10px;padding:11px;background:transparent;border:1px solid var(--green);border-radius:3px;color:var(--green);font-family:'Share Tech Mono',monospace;font-size:0.84rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer}
+.btn-exp.show{display:block}
+.log{background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:9px 11px;max-height:100px;overflow-y:auto;font-size:0.64rem;color:var(--muted)}
+.log::-webkit-scrollbar{width:2px}
+.log::-webkit-scrollbar-thumb{background:var(--dim)}
+.ll{line-height:1.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ll.ok{color:var(--green)}.ll.err{color:var(--accent);opacity:0.8}.ll.w{color:var(--yellow);opacity:0.8}.ll.i{color:var(--blue);opacity:0.7}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--dim);border-top-color:var(--accent);border-radius:50%;animation:sp 0.5s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="logo">[ KWZ ]</div>
+<div class="sub">discord username scanner // v6.0</div>
+
+<div class="card">
+  <div class="ct">mode de scan</div>
+  <div class="modes">
+    <div class="mcard on" id="m0" onclick="setMode(0)">
+      <span class="mico">🐢</span>
+      <span class="mn">Prudent</span>
+      <span class="mi">1 / 2s</span>
+    </div>
+    <div class="mcard" id="m1" onclick="setMode(1)">
+      <span class="mico">⚡</span>
+      <span class="mn">Rapide</span>
+      <span class="mi">2 / 1s</span>
+    </div>
+    <div class="mcard" id="m2" onclick="setMode(2)">
+      <span class="mico">💀</span>
+      <span class="mn">Turbo</span>
+      <span class="mi">3 / 0.5s</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ct">configuration</div>
+  <div class="lbl">longueur</div>
+  <div class="pills">
+    <div class="pill on" id="p3" onclick="tL(3)">3 chars</div>
+    <div class="pill on" id="p4" onclick="tL(4)">4 chars</div>
+  </div>
+  <div class="lbl">charset</div>
+  <div class="pills" style="margin-bottom:0">
+    <div class="pill on" id="ca" onclick="tC('a')">a–z</div>
+    <div class="pill on" id="cn" onclick="tC('n')">0–9</div>
+    <div class="pill" id="cu" onclick="tC('u')">_</div>
+    <div class="pill" id="cd" onclick="tC('d')">.</div>
+  </div>
+</div>
+
+<button class="btn" id="btnGo" onclick="startScan()">
+  <span id="bIco">▶</span><span id="bLbl">// LANCER LE SCAN</span>
+</button>
+<button class="btn2" onclick="stopScan()">[ ARRÊTER ]</button>
+
+<div class="card" style="margin-top:10px">
+  <div class="ct">résultats</div>
+  <div class="prog"><div class="pf" id="pf"></div></div>
+  <div class="pt" id="pt">en attente...</div>
+  <div class="stats">
+    <div class="stat"><span class="sn b" id="st">0</span><span class="sl2">testés</span></div>
+    <div class="stat"><span class="sn g" id="sa">0</span><span class="sl2">dispos</span></div>
+    <div class="stat"><span class="sn r" id="sk">0</span><span class="sl2">pris</span></div>
+  </div>
+  <div class="spd"><span>VITESSE</span><span id="spd">— req/s</span></div>
+  <div class="sl" id="sl">système prêt</div>
+  <div class="ftabs">
+    <button class="ftab on" id="fa" onclick="filt('all')">tous</button>
+    <button class="ftab" id="fv" onclick="filt('available')">[ dispos ]</button>
+    <button class="ftab" id="fk" onclick="filt('taken')">pris</button>
+  </div>
+  <div class="grid" id="grid">
+    <div class="empty">_ en attente<br><span style="color:#1a0303">lance le scan</span></div>
+  </div>
+  <button class="btn-exp" id="bExp" onclick="doExp()">[ copier les disponibles ]</button>
+</div>
+
+<div class="card">
+  <div class="ct">terminal</div>
+  <div class="log" id="log">
+    <div class="ll i">// KWZ v6.0 — token bot Discord actif</div>
+    <div class="ll">// requêtes directes — zéro CORS — iPhone ready</div>
+  </div>
+</div>
+</div>
+
+<script>
+// Token bot Discord — NE PAS PARTAGER
+const TOKEN = 'MTUwMjQ0NzYwOTgxMjM1MzIzNA.G434M0.gjduDj-RW2ORUAR4ZVTHbncE8LSHdoEqOPEpgU';
+
+// Modes
+const MODES = [{p:1,d:2000},{p:2,d:1000},{p:3,d:500}];
+let curMode = 0;
+function setMode(n){
+  curMode=n;
+  [0,1,2].forEach(i=>document.getElementById('m'+i).classList.remove('on'));
+  document.getElementById('m'+n).classList.add('on');
+}
+
+// Config
+let lens=new Set([3,4]),cs=new Set(['a','n']);
+function tL(n){const e=document.getElementById('p'+n);if(lens.has(n)){if(lens.size<2)return;lens.delete(n);e.classList.remove('on')}else{lens.add(n);e.classList.add('on')}}
+function tC(c){const e=document.getElementById('c'+c);if(cs.has(c)){if(cs.size<2)return;cs.delete(c);e.classList.remove('on')}else{cs.add(c);e.classList.add('on')}}
+function buildAll(){
+  let ch='';
+  if(cs.has('a'))ch+='abcdefghijklmnopqrstuvwxyz';
+  if(cs.has('n'))ch+='0123456789';
+  if(cs.has('u'))ch+='_';
+  if(cs.has('d'))ch+='.';
+  const all=[];
+  for(const len of lens)(function g(c){if(c.length===len){all.push(c);return}for(const x of ch)g(c+x)})('');
+  for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+  return all;
+}
+
+// State
+let running=false,stop=false,res={},queue=[],done=0,avail=0,taken=0,curF='all',t0=0,reqCount=0;
+
+// Log
+function lg(msg,t=''){
+  const b=document.getElementById('log');
+  const d=document.createElement('div');d.className='ll '+(t||'');
+  const ts=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  d.textContent=`[${ts}] ${msg}`;b.appendChild(d);
+  if(b.children.length>150)b.removeChild(b.firstChild);
+  b.scrollTop=b.scrollHeight;
+}
+
+// UI
+function setSt(msg,c=''){const e=document.getElementById('sl');e.textContent=msg;e.className='sl'+(c?' '+c:'')}
+function upd(){
+  document.getElementById('st').textContent=done;
+  document.getElementById('sa').textContent=avail;
+  document.getElementById('sk').textContent=taken;
+  const pct=queue.length?(done/queue.length*100):0;
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('pt').textContent=queue.length?done+' / '+queue.length+' vérifiés':'—';
+  document.getElementById('bExp').className=avail>0?'btn-exp show':'btn-exp';
+  if(t0&&reqCount>0){
+    const rps=(reqCount/((Date.now()-t0)/1000)).toFixed(2);
+    document.getElementById('spd').textContent=rps+' req/s';
+  }
+}
+function addCard(name,status){
+  res[name]=status;
+  const grid=document.getElementById('grid');
+  const empty=grid.querySelector('.empty');if(empty)empty.remove();
+  if(curF!=='all'&&status!==curF)return;
+  if(status==='taken'){const ts=grid.querySelectorAll('.uc.taken');if(ts.length>=60)ts[0].remove()}
+  const d=document.createElement('div');d.className='uc '+status;d.textContent=name;
+  grid.appendChild(d);
+  if(status==='available')grid.scrollTop=grid.scrollHeight;
+}
+function filt(f){
+  curF=f;['fa','fv','fk'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById(f==='all'?'fa':f==='available'?'fv':'fk').classList.add('on');
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  const entries=Object.entries(res);
+  const filtered=f==='all'?entries:entries.filter(([,v])=>v===f);
+  if(!filtered.length){grid.innerHTML='<div class="empty">_ aucun résultat</div>';return}
+  filtered.slice(-200).forEach(([n,v])=>{const d=document.createElement('div');d.className='uc '+v;d.textContent=n;grid.appendChild(d)});
+}
+
+// Discord API avec token bot
+async function checkName(name){
+  try{
+    const r=await fetch('https://discord.com/api/v9/users/'+encodeURIComponent(name),{
+      headers:{
+        'Authorization':'Bot '+TOKEN,
+        'Content-Type':'application/json'
+      },
+      signal:AbortSignal.timeout(8000)
+    });
+    reqCount++;
+    if(r.status===404)return'available';
+    if(r.status===200||r.status===401)return'taken';
+    if(r.status===429){
+      const j=await r.json().catch(()=>({}));
+      const wait=(j.retry_after||5)*1000;
+      lg('rate limit — pause '+(wait/1000).toFixed(1)+'s','w');
+      await sleep(wait);
+      return checkName(name); // retry
+    }
+    // Lire body pour détecter "Unknown User"
+    const txt=await r.text().catch(()=>'');
+    if(txt.includes('10013')||txt.includes('Unknown User'))return'available';
+    if(txt.includes('"id"'))return'taken';
+    return null;
+  }catch(e){
+    return null;
+  }
+}
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+// Scan principal avec workers parallèles
+async function startScan(){
+  if(running)return;
+  res={};done=0;avail=0;taken=0;reqCount=0;t0=Date.now();stop=false;
+  queue=buildAll();
+  if(!queue.length)return;
+  running=true;
+  document.getElementById('grid').innerHTML='';
+  document.getElementById('btnGo').disabled=true;
+  document.getElementById('bIco').innerHTML='<span class="spin"></span>';
+  document.getElementById('bLbl').textContent='// SCAN EN COURS';
+  upd();setSt('scan démarré — '+queue.length.toLocaleString()+' noms','on');
+  lg('scan démarré — '+queue.length.toLocaleString()+' noms — mode '+['prudent','rapide','turbo'][curMode],'i');
+
+  const mode=MODES[curMode];
+  let qIdx=0;
+
+  async function worker(){
+    while(!stop&&qIdx<queue.length){
+      const name=queue[qIdx++];
+      setSt('test: '+name+' ('+done+'/'+queue.length+')','on');
+      let status=await checkName(name);
+      // Retry si null
+      if(status===null){
+        await sleep(1000);
+        status=await checkName(name);
+      }
+      if(status===null)status='taken'; // fallback
+      done++;
+      if(status==='available'){avail++;lg('✓ DISPONIBLE: '+name,'ok')}
+      else if(status==='taken')taken++;
+      addCard(name,status);upd();
+      if(!stop&&qIdx<queue.length)await sleep(mode.d);
+    }
+  }
+
+  const workers=[];
+  for(let w=0;w<mode.p;w++){
+    await sleep(w*300);
+    workers.push(worker());
+  }
+  await Promise.all(workers);
+
+  running=false;
+  document.getElementById('btnGo').disabled=false;
+  document.getElementById('bIco').textContent='▶';
+  document.getElementById('bLbl').textContent='// RELANCER';
+  const msg=(stop?'arrêté':'terminé')+' — '+avail+' dispo / '+done+' testés';
+  setSt(msg,avail>0?'ok':'');lg(msg,avail>0?'ok':'');
+}
+
+function stopScan(){
+  stop=true;running=false;
+  document.getElementById('btnGo').disabled=false;
+  document.getElementById('bIco').textContent='▶';
+  document.getElementById('bLbl').textContent='// RELANCER';
+  setSt('arrêté — '+avail+' dispo');
+}
+
+function doExp(){
+  const list=Object.entries(res).filter(([,v])=>v==='available').map(([k])=>k).join('\n');
+  if(!list)return;
+  if(navigator.clipboard)navigator.clipboard.writeText(list).then(()=>{
+    const b=document.getElementById('bExp');
+    b.textContent='[ ✓ COPIÉ ]';
+    setTimeout(()=>{b.textContent='[ copier les disponibles ]'},2500);
+  });
+  else alert(list);
+}
+</script>
+
+</body>
+</html>
